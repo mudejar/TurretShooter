@@ -12,10 +12,42 @@ local alienHead = display.newImage("boss.png", 250, 360)
 
 -- set the turret
 local turret = display.newImage("turret.png", 250, 800)
-physics.addBody(turret, "static", {density = 3.0, friction = 0.5, bounce = 0.3})
+--physics.addBody(turret, "static", {density = 3.0, friction = 0.5, bounce = 0.3})
+
+-- add the explosion sprite sheet
+local explosionOptions = 
+{
+  width = 100,
+  height = 100,
+  numFrames = 10
+}
+
+local explosionSheet = graphics.newImageSheet("explosion_spritesheet.png", explosionOptions)
 
 -- collision event handler
-
+local function onCollision(event)
+  if (event.phase == "ended") then
+    event.object1:removeSelf()
+    event.object2:removeSelf()
+  
+    -- display explosion animation
+    local explosionSequenceData = 
+    {
+      name = "explosionSprite",
+      start = 1,
+      count = 10,
+      time = 500,
+      loopCount = 1,
+      loopDirection = "forward"
+    }
+  
+    local explosion = display.newSprite(explosionSheet, explosionSequenceData)
+    local explosionX = event.x
+    local explosionY = event.y
+    explosion.x = explosionX; explosion.y = explosionY
+    explosion:play()
+  end
+end
 
 -- function for finding the proper angle that the bullets and turret must rotate
 local function angleOfRotation(turretX, turretY, eventX, eventY)
@@ -69,5 +101,6 @@ end
   
   transition.to(target, {time = 1000, x = math.random(0,420), y = math.random(100, 680), onComplete = function1})
   
- -- event listener for touch on the screen
+ -- event listeners
  Runtime:addEventListener("tap", aimAndShoot)
+ Runtime:addEventListener("collision", onCollision)
