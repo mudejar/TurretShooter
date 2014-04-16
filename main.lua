@@ -30,6 +30,11 @@ local explosionSheet = graphics.newImageSheet("explosion_spritesheet.png", explo
 --  return true
 --end
 
+time = 1000
+function speed()
+  time = time - 10
+  return time
+end
 
 -- target creation and movement
 --while movingTargets
@@ -71,6 +76,9 @@ local function onCollision(event)
         display.remove(explosion)
         explosion = nil
       end
+      
+      -- add a score after the hit
+      
     end
   end
 end
@@ -110,40 +118,40 @@ end
   local function1, function2
   
   function function1(e)
-    transition.to(target, {time = 500, x = math.random(0, 420), y = math.random(100, 680), onComplete = function2})
+    transition.to(target, {time = speed(), x = math.random(0, 420), y = math.random(100, 680), onComplete = function2})
   end
   
   function function2(e)
-    transition.to(target, {time = 500, x = math.random(0, 420), y = math.random(100, 680), onComplete = function1})
+    transition.to(target, {time = speed(), x = math.random(0, 420), y = math.random(100, 680), onComplete = function1})
   end
   
-transition.to(target, {time = 1000, x = math.random(0,420), y = math.random(100, 680), onComplete = function1})
+transition.to(target, {time = speed(), x = math.random(0,420), y = math.random(100, 680), onComplete = function1})
 
 -- block looping for target1
 local function3, function4
   
 function function3(e)
-  transition.to(target1, {time = 500, x = math.random(0, 420), y = math.random(100, 680), onComplete = function4})
+  transition.to(target1, {time = speed(), x = math.random(0, 420), y = math.random(100, 680), onComplete = function4})
 end
   
 function function4(e)
-  transition.to(target1, {time = 500, x = math.random(0, 420), y = math.random(100, 680), onComplete = function3})
+  transition.to(target1, {time = speed(), x = math.random(0, 420), y = math.random(100, 680), onComplete = function3})
 end
 
-transition.to(target1, {time = 1000, x = math.random(0,420), y = math.random(100, 680), onComplete = function3})
+transition.to(target1, {time = speed(), x = math.random(0,420), y = math.random(100, 680), onComplete = function3})
 
 -- block looping for target2
 local function5, function6
   
 function function5(e)
-  transition.to(target2, {time = 500, x = math.random(0, 420), y = math.random(100, 680), onComplete = function6})
+  transition.to(target2, {time = speed(), x = math.random(0, 420), y = math.random(100, 680), onComplete = function6})
 end
   
 function function6(e)
-  transition.to(target2, {time = 500, x = math.random(0, 420), y = math.random(100, 680), onComplete = function5})
+  transition.to(target2, {time = speed(), x = math.random(0, 420), y = math.random(100, 680), onComplete = function5})
 end
 
-transition.to(target2, {time = 1000, x = math.random(0,420), y = math.random(100, 680), onComplete = function5})
+transition.to(target2, {time = speed(), x = math.random(0,420), y = math.random(100, 680), onComplete = function5})
   
  -- event listeners
  Runtime:addEventListener("tap", aimAndShoot)
