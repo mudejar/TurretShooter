@@ -17,12 +17,19 @@ local turret = display.newImage("turret.png", 250, 800)
 -- add the explosion sprite sheet
 local explosionOptions = 
 {
-  width = 100,
-  height = 100,
+  width = 128,
+  height = 128,
   numFrames = 10
 }
 
 local explosionSheet = graphics.newImageSheet("explosion_spritesheet.png", explosionOptions)
+
+--local function endOfExplosion(e)
+--  if e.phase == "ended" then
+--    e.object1:removeSelf()
+--  end
+--  return true
+--end
 
 -- collision event handler
 local function onCollision(event)
@@ -42,10 +49,15 @@ local function onCollision(event)
     }
   
     local explosion = display.newSprite(explosionSheet, explosionSequenceData)
-    local explosionX = event.x
-    local explosionY = event.y
+    local explosionX = event.object1.x
+    local explosionY = event.object1.y
     explosion.x = explosionX; explosion.y = explosionY
+    --explosion:addEventListener("sprite", endOfExplosion)
     explosion:play()
+    if explosion.phase == "ended" then
+      display.remove(explosion)
+      explosion = nil
+    end
   end
 end
 
