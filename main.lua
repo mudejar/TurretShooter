@@ -14,7 +14,24 @@ local alienHead = display.newImage("boss.png", 250, 360)
 local turret = display.newImage("turret.png", 250, 800)
 
 -- load necessary audio streams
---local laserShot = audio.loadStream()
+local laserShot = audio.loadSound("laser_shot.wav")
+local explosionSound = audio.loadSound("explosion.wav")
+
+local explosionSoundOptions = 
+{
+  channel = 1,
+  loops = 0,
+  duration = 30000,
+  fadein = 5000
+}
+
+local laserShotSoundOptions = 
+{
+  channel = 2,
+  loops = 0,
+  duration = 30000,
+  fadein = 5000
+}
 
 -- add the explosion sprite sheet
 local explosionOptions = 
@@ -85,7 +102,7 @@ local function onCollision(event)
     if (event.phase == "ended") then
       event.object1:removeSelf()
       event.object2:removeSelf()
-  
+     
       -- display explosion animation
       local explosionSequenceData = 
       {
@@ -103,6 +120,7 @@ local function onCollision(event)
     explosion.x = explosionX; explosion.y = explosionY
       --explosion:addEventListener("sprite", endOfExplosion)
       explosion:play()
+      local explosionChannel = audio.play(explosionSound, explosionSoundOptions)
       if explosion.phase == "ended" then
         display.remove(explosion)
         explosion = nil
@@ -142,6 +160,7 @@ local function aimAndShoot(event)
   velocityY = 100*(event.y - bullet.y)
   bullet.rotation = rotationAngle
   bullet:setLinearVelocity(velocityX, velocityY)
+  laserChannel = audio.play(laserShotSound, laserShotSoundOptions)
   return true
 end
   
