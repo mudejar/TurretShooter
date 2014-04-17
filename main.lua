@@ -13,6 +13,9 @@ local alienHead = display.newImage("boss.png", 250, 360)
 -- set the turret
 local turret = display.newImage("turret.png", 250, 800)
 
+-- load necessary audio streams
+--local laserShot = audio.loadStream()
+
 -- add the explosion sprite sheet
 local explosionOptions = 
 {
@@ -23,6 +26,26 @@ local explosionOptions =
 
 local explosionSheet = graphics.newImageSheet("explosion_spritesheet.png", explosionOptions)
 
+-- set the score count
+enemiesSlain = 0
+score = display.newText(0, 100, 800, native.systemFont, 70)
+function updateScore(addScore)
+  local total = addScore * enemiesSlain
+  score:removeSelf()
+  score = display.newText(tostring(total), 100, 800, native.systemFont, 70)
+  score:setFillColor(1, 1, 1)
+  enemiesSlain = enemiesSlain + 1
+  
+  -- if the total score exceeds 1000 the game is over
+  if total > 1000 then
+    playerWins()
+  end
+
+  return score
+end
+
+updateScore(0)
+
 --local function endOfExplosion(e)
 --  if e.phase == "ended" then
 --    e.object1:removeSelf()
@@ -30,12 +53,18 @@ local explosionSheet = graphics.newImageSheet("explosion_spritesheet.png", explo
 --  return true
 --end
 
-time = 1000
-function speed()
-  time = time - 10
-  return time
+local function playerWins()
+  local endText = display.newText("Congratulations!")  
 end
 
+time = 1000
+function speed()
+  if time > 100 then
+    time = time - 10
+  end
+  
+  return time
+end
 -- target creation and movement
 --while movingTargets
 local targetSpeed = 1000
@@ -47,6 +76,8 @@ local target1 = display.newImage("angry_smiley_alien.png", randomX, randomY)
 physics.addBody(target1, "dynamic", {density = 3.0, friction = 0.5, bounce = 1.0})
 local target2 = display.newImage("invader_red.png", randomX, randomY)
 physics.addBody(target2, "kinematic", {density = 3.0, friction = 0.5, bounce = 1.0})
+local target3 = display.newImage("squid_alien.png", randomX, randomY)
+physics.addBody(target3, "kinematic", {density = 3.0, friction = 0.5, bounce = 1.0})
 
 -- collision event handler
 local function onCollision(event)
@@ -78,7 +109,7 @@ local function onCollision(event)
       end
       
       -- add a score after the hit
-      
+      updateScore(300)
     end
   end
 end
@@ -153,6 +184,19 @@ end
 
 transition.to(target2, {time = speed(), x = math.random(0,420), y = math.random(100, 680), onComplete = function5})
   
+-- block looping for target3
+local function7, function8
+  
+function function7(e)
+  transition.to(target3, {time = speed(), x = math.random(0, 420), y = math.random(100, 680), onComplete = function8})
+end
+  
+function function8(e)
+  transition.to(target3, {time = speed(), x = math.random(0, 420), y = math.random(100, 680), onComplete = function7})
+end
+
+transition.to(target2, {time = speed(), x = math.random(0,420), y = math.random(100, 680), onComplete = function7})
+
  -- event listeners
  Runtime:addEventListener("tap", aimAndShoot)
  Runtime:addEventListener("collision", onCollision)
